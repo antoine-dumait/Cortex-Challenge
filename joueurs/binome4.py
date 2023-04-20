@@ -15,6 +15,7 @@ import algo.manquant as manquant
 import algo.doublon as doublon
 import algo.raisonnement as raisonnement
 import algo.calcul as calcul
+import algo.labyrinthe as labyrinthe
 
 def jouer(card: dict) -> Union[None, str, int]:
     '''
@@ -31,5 +32,6 @@ def jouer(card: dict) -> Union[None, str, int]:
     if type == "doublon": return doublon.main(card)
     if type == "raisonnement": return raisonnement.main(card)
     if type == "calcul": return calcul.main(card)
+    if type == "labyrinthe": return labyrinthe.main(card)
     
     return None
