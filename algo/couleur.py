@@ -23,8 +23,7 @@ def main(card: dict) -> str:
 "rouge": "red",
 "saumon": "salmon",
 "vert": "green",
-}
-    
+} 
     for (color_text, color_value) in card_colors.items():
         if (color_value == color_text or 
             color_value == colors_table.get(color_text)):

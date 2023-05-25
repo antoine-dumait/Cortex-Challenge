@@ -5,7 +5,7 @@ L1 - MI-I : Concrétisation disciplinaire -- Cortex Challenge
 __team__ = "Binôme 4"
 __authors__ = ["Antoine DUMAIT", "Islem HOCINI"]
 __date__ = "18/04/2023"
-__version__ = "0.1"
+__version__ = "1.0"
 
 from typing import Union
 import algo.couleur as couleur

@@ -1,23 +1,24 @@
 "Avance un rayon de lumière et change de direction en contact avec un miroir, retourne valeur en fonction de sa position finale"
 def main(card: dict) -> int:
     cells = card.get("map") # position en [Y][X]
-    lum_pos = [2,4] # position en [x,y] !!
+    # position en [x,y] !!
+    row = 4
+    col = 2
     lum_dir = [0,-1]
-    mirrors = {
-        "/":-1,
-        "\\":1
-    }
-    while 0 < lum_pos[0] < 5 and 0 < lum_pos[1] < 5:
-        if mirrors.get(cells[lum_pos[1]][lum_pos[0]]):
-            k=mirrors.get(cells[lum_pos[1]][lum_pos[0]])
-            # lors contact miroir la direction (x,y) devient (y,x) * 1 ou -1 en fonction du miroir 
-            lum_dir = [lum_dir[1]*k, lum_dir[0]*k] 
-        lum_pos = [lum_pos[0] + lum_dir[0],lum_pos[1]+lum_dir[1]]
+    while 0 < col < 5 and 0 < row < 5:
+        cell = cells[row][col]
+        if cell != "":
+            if cell == "/": mirror = -1
+            else: mirror = 1
+            lum_dir = [lum_dir[1]*mirror, lum_dir[0]*mirror] 
+        # lors contact miroir la direction (x,y) devient (y,x) * 1 ou -1 en fonction du miroir 
+        col += lum_dir[0]
+        row  += lum_dir[1]
     # remplacer par dictionnaire plutôt que conditions ?
-    if lum_pos[1] == 0: return lum_pos[0] 
-    if lum_pos[0] == 5: return lum_pos[1] + 4
-    if lum_pos[1] == 5: 
-        if lum_pos[0] == 1:
+    if row == 0: return col 
+    if col == 5: return row + 4
+    if row == 5: 
+        if col == 1:
             return 11
-        return 13 - lum_pos[0]
-    return 16 - lum_pos[1]
+        return 13 - col
+    return 16 - row

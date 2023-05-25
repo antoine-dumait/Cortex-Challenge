@@ -174,7 +174,7 @@ if __name__ == '__main__':
     winner = dict()
     # Jeux
     for c in cartes:
-        carte = json.load(open("cards/" + c))
+        carte = json.load(open("cards/" + c, encoding='utf_8'))
         # Chaque joueur joue la carte son résultat et son temps d'execution sont sauvegardés
         for j in joueurs:
             if j["playing"]:

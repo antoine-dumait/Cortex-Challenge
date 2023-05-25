@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang=fr-FR>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/dark.min.css">
+    <title>Cortex Challenge Antoine et Islem</title>
+</head>
+<body>
+    <div class="line">
+        <div class="header"></div>
+        <div class="container percentage">
+            <div class="text">
+                <h2>Première semaine</h2>
+                <p>Développement des algorithmes intuitionnels.</p>
+            </div>
+            <button onclick="showCode()">Show code</button>
+            <div class="pnum">
+                <h3>20%</h3><p>faster than previous version*</p>
+            </div>
+        </div>
+        <div class="code-container" id="code">
+            <p>This python code</p>
+            <pre>
+                <code class="language-py">
+""" Boucle à travers les élements i de la liste trié en sens décroissant et 
+cherche les couples (peut être plus que 2 nombres) possibles telles 
+que i + x = n le nombre recherché. Ensuite vérifie si le couple 
+y + z = x (y et z appartenant a la liste) existe récursivement 
+jusqu'à ce que soit le couple existe, soit couple impossible."""
+def main(card: dict) -> str:
+    nums = card.get("numbers")
+    nums.sort(reverse=True)
+    n = card.get("result")
+    possible = []
+    # boucle à travers élements liste nums et ajoute dans couple possibles
+    for i in range(len(nums)):
+        if nums[i] &lt; n:
+            possible.append([i+1, n - nums[i], nums[i]])
+        elif nums[i] == n:
+            return nums[i]
+    # jusqu'à ce qu'il existe un couple possible, vérifie si ils existent 
+    # ou si ils peuvent être formés d'autres couples
+    while possible != []: 
+        buffer=[]
+        for j in possible:
+            for i in range(j[0],len(nums)):
+                if  0 &lt;= j[1] - nums[i] &lt;= nums[i]:
+                    if j[1] == nums[i] :
+                        return("+".join(str(i) for i in [nums[i]] + j[2:]))
+                    else:
+                        buffer.append([i+1, j[1] - nums[i], nums[i]] + j[2:])
+        possible=buffer
+                        </code>
+                    </pre>
+        </div>
+        <div class="container percentage">
+            <div class="text">
+                <h2>Deuxième semaine</h2>
+                <p>Création des unités de test.</p>
+            </div>
+            <div class="pnum">
+                <h3>16%</h3><p>faster than previous version*</p>
+            </div>
+        </div>
+        <div class="container percentage">
+            <div class="text">
+                <h2>Troisième semaine</h2>
+                <p>Amélioration des algorithmes pour des grands jeux de données.
+                Prototyping du site web</p>
+            </div>
+            <div class="pnum">
+                <h3>56%</h3><p>faster than previous version*</p>
+            </div>
+        </div>
+        <div class="container percentage">
+            <div class="text">
+                <h2>Quatrième semaine</h2>
+                <p>En cours de production.</p>
+            </div>
+        </div>
+        <div class="container">
+            <div class="text">
+                <h2>Cinquième semaine</h2>
+                <p>En cours de production.</p>
+            </div>
+        </div>
+
+    </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script src="scripts.js"></script>
+</body>
+
+</html>
