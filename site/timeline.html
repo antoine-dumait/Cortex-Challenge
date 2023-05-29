@@ -3,93 +3,714 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/dark.min.css">
+    <link rel="stylesheet" href="highlight/styles/dark.min.css">
     <title>Cortex Challenge Antoine et Islem</title>
 </head>
 <body>
-    <div class="line">
-        <div class="header"></div>
-        <div class="container percentage">
-            <div class="text">
-                <h2>Première semaine</h2>
-                <p>Développement des algorithmes intuitionnels.</p>
+    <header>
+        <h1>Cortex Challenge</h1>
+        <h2>The ultimate bot</h2>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.html">Cortex</a></li>
+                <li><a href="binome.html">Présentation</a></li>
+                <li><a class="selected" href="timeline.html">Développement</a></li>
+            </ul>
+        </nav>
+    </header>
+    <nav class="problems">
+        <ul>
+            <li><a id="preface-nav">Préface</a></li>
+            <li><a id="calcul-nav">Calcul</a></li>
+            <li><a id="couleur-nav">Couleur</a></li>
+            <li><a id="doublon-nav">Doublon</a></li>
+            <li><a id="frequence-nav">Fréquence</a></li>
+            <li><a id="labyrinthe-nav">Labyrinthe</a></li>
+            <li><a id="manquant-nav">Manquant</a></li>
+            <li><a id="raisonnement-nav">Raisonnement</a></li>
+            <li><a id="reflexion-nav">Réflexion</a></li>
+        </ul>
+    </nav>
+    <div class="main">
+        <div class="problem" id="preface"><h1>Préface</h1>
+            <div class="case">
+                <p>Afin de choisir entre deux algorithmes, il nous est nécessaire
+                    de pouvoir comparer leur vitesse. Là où la notation O( ) permet de 
+                    connaître la compléxité théorique d'un algorithme, celle-ci n'est 
+                    pas précise pour par exemple deux algorithmes O(n). La comparaison 
+                    théorique n'est pas suffisante.
+                    <br>
+                    Ainsi nous avons besoin de la vitesse concrète d'un algorithme,
+                    pour ceci nous avons besoin de : <br>
+                    &nbsp;&nbsp;- mesurer en temps la vitesse d'éxecution d'un algorithme. <br>
+                    &nbsp;&nbsp;- posséder un jeu de données de suffisant pour ne pas avoir une moyenne biaisé.
+                    
+                </p>
             </div>
-            <button onclick="showCode()">Show code</button>
-            <div class="pnum">
-                <h3>20%</h3><p>faster than previous version*</p>
+            <h1>Temps d'éxecution</h1>
+            <div class="try">
+                <p>Afin de mesurer le temps qu'a pris une fonction à s'éxécuter nous
+                    faisons appel à la fonction <b>perf_counter()</b> du module <b>time</b> 
+                    qui permet de capturer une date dans le temps, il nous suffit d'en capturer
+                    une autre une fois que notre programme s'est executé et de faire
+                    la différence pour connaiître le temps que celui-ci a pris.
+                    Grâce à cette information nous pouvons comparer plusieurs algorthimes
+                    sur le même jeu de données et ainsi connaître lequel est le plus rapide en fonction
+                    de la complexité des données et de leur taille.  
+                </p>
+                <pre>
+                    <code class="language-py">
+fonctions = []
+times = [0] * len(fonctions)
+for i,fonc in enumerate(fonctions):
+        start_time = time.perf_counter()
+        result = fonc.main(card)
+        times[i] += time.perf_counter() - start_time
+for i,(f,t) in enumerate(zip([f.__name__ for f in fonctions], times)):
+    print(f'{f:25} {i+1:5} --- {t} seconds ---')
+                    </code>
+                </pre>
+            </div>
+            <h1>Création de données</h1>
+            <div class="try">
+                <p>Le jeu de données ne comportant que deux exemples pour chaque problème,
+                    il nous est nécessaire de créer nos propres carte pour pouvoir
+                    mesurer efficacement le temps d'éxecution des fonctions. Pour faire celles-ci,
+                    nous pouvons écrire un algorithme qui créer aléatoirement des cartes.
+                    Il nous faut définir les règles de chaque probleme.
+                    Le code donné en exemple et celui de création des cartes pour le problème
+                    manquant, les autres algorithmes de création de carte sont disponibles sur le <a href="https://github.com/Steeex/Cortex-Challenge">GitHub</a> du projet
+                </p>
+                <pre>
+                    <code class="language-py">
+    def manquant(maxi=None, size=None):
+        if maxi == None: maxi = randint(10,99)
+        if size == None: size = randint(5,100)
+        red_len = randint(1,size-1)
+        blue_len = size - red_len
+        maxi = max(max(red_len, blue_len), maxi-max(red_len, blue_len))
+        red_start, blue_start = randint(1,maxi), randint(1,maxi)
+        red = [str(i)+"R" for i in range(red_start,red_start+red_len+1)]
+        blue = [str(i)+"B" for i in range(blue_start,blue_start+blue_len+1)]
+        if blue_len &lt;= 2 or randint(0,1) and red_len > 2:
+            r = randint(2,red_len-1)
+            result = int(red[r][:-1])
+            red[r]= str(red_start+red_len+1)+"R"
+        else:
+            r = randint(2,blue_len-1)
+            result = int(blue[r][:-1])
+            blue[r]= str(blue_start+blue_len+1)+"B"
+        liste = (red + blue)
+        shuffle(liste)
+        return liste, result
+                    </code>
+                </pre>
             </div>
         </div>
-        <div class="code-container" id="code">
-            <p>This python code</p>
-            <pre>
-                <code class="language-py">
-""" Boucle à travers les élements i de la liste trié en sens décroissant et 
-cherche les couples (peut être plus que 2 nombres) possibles telles 
-que i + x = n le nombre recherché. Ensuite vérifie si le couple 
-y + z = x (y et z appartenant a la liste) existe récursivement 
-jusqu'à ce que soit le couple existe, soit couple impossible."""
+        <div class="problem" id="calcul"><h1>Calcul</h1>
+            <div class="try">
+                <p>Notre premier algorithme pour ce problème consistait à prendre les nombres dans 
+                    la liste trié dans le sens décroissant et de former des couples avec les nombres plus petits
+                    jusqu'à ce que le somme soit le nombre désiré ou plus grand et donc nous arrêtions d'essayer sur ce couple.
+                </p>
+                <pre>
+                    <code class="language-py">
 def main(card: dict) -> str:
     nums = card.get("numbers")
     nums.sort(reverse=True)
     n = card.get("result")
-    possible = []
-    # boucle à travers élements liste nums et ajoute dans couple possibles
+    possible=[]
     for i in range(len(nums)):
         if nums[i] &lt; n:
-            possible.append([i+1, n - nums[i], nums[i]])
+            possible.append([i+1, n - nums[i], [nums[i]]])
         elif nums[i] == n:
-            return nums[i]
-    # jusqu'à ce qu'il existe un couple possible, vérifie si ils existent 
-    # ou si ils peuvent être formés d'autres couples
-    while possible != []: 
-        buffer=[]
+            return str(nums[i])
+    while possible != []:
         for j in possible:
             for i in range(j[0],len(nums)):
-                if  0 &lt;= j[1] - nums[i] &lt;= nums[i]:
-                    if j[1] == nums[i] :
-                        return("+".join(str(i) for i in [nums[i]] + j[2:]))
+                rest = j[1]
+                nu = nums[i]
+                if  0 &lt;= j[1] - nu &lt;= n:
+                    if j[1] == nu :
+                        return "+".join(str(i) for i in [nu] + j[2])
                     else:
-                        buffer.append([i+1, j[1] - nums[i], nums[i]] + j[2:])
-        possible=buffer
-                        </code>
-                    </pre>
-        </div>
-        <div class="container percentage">
-            <div class="text">
-                <h2>Deuxième semaine</h2>
-                <p>Création des unités de test.</p>
+                        buffer.append([i+1, j[1] - nu, j[2] + [nu]])
+        possible=buffer 
+                    </code>
+                </pre>
             </div>
-            <div class="pnum">
-                <h3>16%</h3><p>faster than previous version*</p>
-            </div>
-        </div>
-        <div class="container percentage">
-            <div class="text">
-                <h2>Troisième semaine</h2>
-                <p>Amélioration des algorithmes pour des grands jeux de données.
-                Prototyping du site web</p>
-            </div>
-            <div class="pnum">
-                <h3>56%</h3><p>faster than previous version*</p>
-            </div>
-        </div>
-        <div class="container percentage">
-            <div class="text">
-                <h2>Quatrième semaine</h2>
-                <p>En cours de production.</p>
+            <div class="try">
+                <p>Nous avons découvert la fonction <a href="https://docs.python.org/3/library/itertools.html#itertools.combinations">combinations</a> de <a href="https://docs.python.org/3/library/itertools.html">itertools</a> qui permet d'essayer
+                    toute les combinaisons d'un groupe d'élement, malgré que notre code précédent 
+                    limite le nombre de test, utiliser les combinaisons reste plus rapide.
+                </p>
+                <pre>
+                    <code class="language-py">
+from itertools import combinations
+def main(card :dict) -> str:
+    nums = card.get("numbers")
+    nums.sort()
+    n = card.get("result")
+    for m in range(1, len(nums)+1):
+        for combination in itertools.combinations(nums , m):
+            if sum(combination) == n:
+                return '+'.join(str(num) for num in combination)
+                    </code>
+                </pre>
             </div>
         </div>
-        <div class="container">
-            <div class="text">
-                <h2>Cinquième semaine</h2>
-                <p>En cours de production.</p>
+        <div class="problem" id="couleur"><h1>Couleur</h1>
+            <div class="try">
+                <p>Notre premier algorithme pour ce problème consistait à 
+                    avoir un dictionnaire contenant des couples français - anglais et anglais - anglais
+                    et de retourner la couleur quand le couple correspondait.
+                </p>
+                <pre>
+                    <code class="language-py">
+def main(card: dict) -> str:
+    card_colors = card.get("colors")
+    colors_table = {
+    "argent": "silver", 
+    "beige": "beige",
+    "blanc": "white",
+    "bleu": "blue",
+    "corail": "coral",
+    "indigo": "indigo",
+    "jaune": "yellow",
+    "lavande": "lavender",
+    "magenta": "magenta",
+    "marron": "brown",
+    "mauve": "purple",
+    "noir": "black",
+    "olive": "olive",
+    "or": "gold",
+    "orange": "orange",
+    "orchidée": "orchid",
+    "rose": "pink",
+    "rouge": "red",
+    "saumon": "salmon",
+    "vert": "green",
+    
+    "silver": "silver",
+    "beige": "beige",
+    "white": "white",
+    "blue": "blue",
+    "coral": "coral",
+    "indigo": "indigo",
+    "yellow": "yellow",
+    "lavender": "lavender",
+    "magenta": "magenta",
+    "brown": "brown",
+    "purple": "purple",
+    "black": "black",
+    "olive": "olive",
+    "gold": "gold",
+    "orange": "orange",
+    "orchid": "orchid",
+    "pink": "pink",
+    "red": "red",
+    "salmon": "salmon",
+    "green": "green"
+    }
+        for (color_text, color_value) in card_colors.items():
+            if colors_table[color_text] == color_value:
+                return color_text
+                    </code>
+                </pre>
+            </div>
+            <div class="try">
+                <p>Nous avons ensuite remarqué qu'il suffisait de comparer la couleur
+                    du texte à elle même ou à sa traduction francaise
+                    diminuant de moitié la taille du dictionnaire.
+                </p>
+                <pre>
+                    <code class="language-py">
+def main(card: dict) -> str:
+    card_colors = card.get("colors")
+    colors_table = {
+    "argent": "silver", 
+    "beige": "beige",
+    "blanc": "white",
+    "bleu": "blue",
+    "corail": "coral",
+    "indigo": "indigo",
+    "jaune": "yellow",
+    "lavande": "lavender",
+    "magenta": "magenta",
+    "marron": "brown",
+    "mauve": "purple",
+    "noir": "black",
+    "olive": "olive",
+    "or": "gold",
+    "orange": "orange",
+    "orchidée": "orchid",
+    "rose": "pink",
+    "rouge": "red",
+    "saumon": "salmon",
+    "vert": "green",
+    } 
+        for (color_text, color_value) in card_colors.items():
+            if (color_value == color_text or 
+                color_value == colors_table.get(color_text)):
+                return color_text
+                    </code>
+                </pre>
             </div>
         </div>
-
+        <div class="problem" id="doublon"><h1>Doublon</h1>
+            <div class="try">
+                <p>Nous avons commencé par un simple dictionnaire contenant les
+                    mots et leur fréquence. Cette approche devient très 
+                    rapidement lente en fonction de la taille du dictionnaire.
+                </p>
+                <pre>
+                    <code class="language-py">
+def main(card: dict) -> str:
+    words = card.get("words")
+    word_quantity = {}
+    for liste in words:
+        for word in liste:
+            if not word_quantity.get(word):
+                word_quantity[word] = 1
+            else: 
+                word_quantity[word] += 1
+    return list(word_quantity.keys())[list(word_quantity.values()).index(2)]
+                    </code>
+                </pre>
+            </div>
+            <div class="try">
+                <p>Nous avons ensuite fait quelques essais avec les sets mais ils n'étaient pas concluant.
+                </p>
+                <pre>
+                    <code class="language-py">
+def main(card: dict) -> str:
+    words = card.get("words")
+    in1 = set()
+    in2 = set()
+    non = set()
+    for liste in words:
+        for mot in liste:
+            if mot not in non:
+                if mot in in1 :
+                    in1.remove(mot)
+                    in2.add(mot)
+                elif mot in in2:
+                    in2.remove(mot)
+                    non.add(mot)
+                else:
+                    in1.add(mot)
+    return next(iter(in2))
+                    </code>
+                </pre>
+            </div>
+            <div class="try">
+                <p>Finalement nous avons choisi d'utiliser la fonction <a href="https://docs.python.org/3/library/collections.html#collections.Counter">counter</a> du module <a href="https://docs.python.org/3/library/collections.html">collections</a> qui permet de rapidement connaître
+                    la quantité de chaque élement présent dans une liste. Nous utilisons la fonction <a href="https://docs.python.org/3/library/itertools.html#itertools.chain">chain</a> du module <a href="https://docs.python.org/3/library/itertools.html">itertools</a> pour aplatir la liste.
+                </p>
+                <pre>
+                    <code class="language-py">
+from collections import Counter
+from itertools import chain
+def main(card: dict) -> str:
+    words = chain(*card.get("words"))
+    words_quantity = Counter(words)
+    return list(words_quantity.keys())[list(words_quantity.values()).index(2)]
+                    </code>
+                </pre>
+            </div>
+            <div class="try">
+                <p>La conversion d'un dictionnaire en liste étant très long pour les grands dictionnaires, 
+                    nous avons décidé de simplement itérer à travers les clés et les valeurs jusqu'à obtenir 
+                    la fréquence deux.
+                </p>
+                <pre>
+                    <code class="language-py">
+from collections import Counter
+from itertools import chain
+def main(card: dict) -> str:
+    words = chain(*card.get("words"))
+    words_quantity = Counter(words)
+    for key,value in words_quantity.items():
+        if value == 2:
+            return key
+                    </code>
+                </pre>
+            </div>
+        </div>
+        <div class="problem" id="frequence"><h1>Fréquence</h1>
+            <div class="try">
+                <p>Comme pour le problème doublon, notre premier algorithme
+                    consistait à compter dans un dictionnaire la fréquence des mots
+                    en ajoutant ceux n'ayant pas encore été compté au passage.
+                </p>
+                <pre>
+                    <code class="language-py">
+def main(card: dict) -> str:
+    words = card.get("words")
+    word_quantity = {}
+    for liste in words:
+        for word in liste:
+            if not word_quantity.get(word):
+                word_quantity[word] = 1
+            else: 
+                word_quantity[word] += 1
+    return min(word_quantity, key=word_quantity.get)
+                    </code>
+                </pre>
+            </div>
+            <div class="try">
+                <p>La fonction <a href="https://docs.python.org/3/library/collections.html#collections.Counter">counter</a> correspondant exactement à nos besoins, 
+                    elle paru comme le choix évident.
+                </p>
+                <pre>
+                    <code class="language-py">
+from collections import Counter
+from itertools import chain
+def main(card: dict) -> str:
+    words = chain(*card.get("words"))
+    word_quantity = Counter(words)
+    return min(word_quantity, key=word_quantity.get)   
+                    </code>
+                </pre>
+            </div>
+            <div class="try">
+                <p>Malgré cela nous avons tout de même essayé la fonction count
+                    en convertissant nos listes en string mais cela reste plus lent que <a href="https://docs.python.org/3/library/collections.html#collections.Counter">counter</a>.
+                </p>
+                <pre>
+                    <code class="language-py">
+from itertools import chain
+def main(card: dict) -> str:
+    words = card.get("words")
+    s = " ".join(" ".join(liste) for liste in words)
+    word_quantity = {i:s.count(i) for i in set(chain(*words))}
+    return min(word_quantity, key=word_quantity.get)
+                    </code>
+                </pre>
+            </div>
+        </div>
+        <div class="problem" id="labyrinthe"><h1>Labyrinthe</h1>
+            <div class="try">
+                <p>Nous n'avions pas remarqué qu'il suffisait de trouver le départ 
+                    et de suivre l'unique chemin pour trouver la sortie. Ainsi notre premier algorithme essayait tous les chemins
+                    en partant des sorties. Pour faire cela l'algorithme cherche tous les chemins possibles
+                    en allant le plus profondèment possible dans le labyrinthe et remontant chemin lorqu'il arrive à
+                    un cul de sec (Depth First Search).
+                </p>
+                <pre>
+                    <code class="language-py">
+def main(card: dict) -> str:
+    matrix = card.get("map")
+    len_ligne = len(matrix[0])
+    len_colonne = len(matrix)
+    # correspond aux sorties
+    start_pos = [[0,0], [len_ligne-1,0], 
+    [len_ligne-1,len_colonne-1], [0,len_colonne-1]]    
+    # correspond à gauche, haut, droite, bas
+    directions = [[-1,0],[0,-1],[1,0],[0,1]]
+    for chiffre, start in enumerate(start_pos):
+        stack = [] # vider le stack et visited amélioration de ~ 0.0001 s
+        visited = []
+        pos = start
+        stack.append(start)
+        visited.append(start)
+    # algo dfs, avance dans les branches du graphes et reviens sur ses pas 
+    # si départ non trouvé jusqu'à ce que tout les cases aient été visités
+        while stack != []:
+            for dir in directions:
+                new_pos = [pos[0] + dir[0], pos[1] + dir[1]]
+                if (0 &lt;= new_pos[0] &lt; len_ligne and 
+                0 &lt;= new_pos[1] &lt; len_colonne
+                and new_pos not in visited):
+                    if matrix[new_pos[1]][new_pos[0]] == "":
+                        pos = new_pos
+                        stack.append(pos)
+                        visited.append(pos)
+                        break
+                    elif matrix[new_pos[1]][new_pos[0]] == "D":
+                        pos = new_pos
+                        stack.append(pos)
+                        visited.append(pos)
+                        return chiffre + 1
+                    else:
+                        pos = new_pos
+                        stack.append(pos)
+                        visited.append(pos)
+            else:
+                pos = stack.pop()
+                    </code>
+                </pre>
+            </div>
+            <div class="try">
+                <p>Après avoir réaliser notre erreur, il nous suffit d'appliquer 
+                    l'algorithme de chemin (DFS) et de retourner le premier 
+                    chiffre que nous croisons
+                </p>
+                <pre>
+                    <code class="language-py">
+from collections import deque
+def main(card :dict):
+    maze = card.get("map")
+    cols_length = len(maze)
+    rows_length = len(maze[0])
+    for y,row in enumerate(maze):
+        try:
+            start_row = row.index("D")
+            start_col = y
+            break
+        except: 
+            pass
+    directions = ((0, 1), (0, -1), (1, 0), (-1, 0))
+    queue = deque([(start_row, start_col)])
+    visited = set([(start_row, start_col)])
+    while queue:
+        row, col = queue.popleft()
+        if maze[col][row] in ["1", "2", "3", "4"]:
+            return int(maze[col][row])
+        for d in directions:
+            new_row = row + d[0]
+            new_col = col + d[1]
+            if (
+                (new_row, new_col) not in visited
+                and 0 &lt;= new_row &lt; rows_length
+                and 0 &lt;= new_col &lt; cols_length
+                and maze[new_col][new_row] != "X"
+            ):
+                queue.append((new_row, new_col))
+                visited.add((new_row, new_col))
+                    </code>
+                </pre>
+            </div>
+        </div>
+        <div class="problem" id="manquant"><h1>Manquant</h1>
+            <div class="try">
+                <p>Le problème manquant n'a pas été très difficile, notre premier 
+                    algorithme reconstitue la suite à partir de la liste et vérifie
+                    que le pas est de 1 entre chaque nombre, si ce n'est pas le cas, BINGO
+                </p>
+                <pre>
+                    <code class="language-py">
+def main(card: dict) -> str:
+    numbers = card.get("numbers")
+    red = []
+    blue = []
+    for s in numbers:
+        if "R" == s[-1]:
+            red.append(int(s[:-1]))
+        else: 
+            blue.append(int(s[:-1]))
+    for liste in (blue,red):
+        liste.sort()
+        if len(liste) != liste[-1] - liste[0] + 1:
+            x_prev = liste[0]
+            for x in liste[1:]:
+                if x_prev + 1 != x: return x_prev + 1
+                x_prev += 1
+                    </code>
+                </pre>
+            </div>
+            <div class="try">
+                <p>Nous avons quand même vérifier si en calculant la somme de chaque 
+                    liste et la comparant avec sa somme présumé (si la suite était complète)
+                    était plus rapide mais ce n'était pas le cas.
+                </p>
+                <pre>
+                    <code class="language-py">
+def main(card: dict) -> str:
+    numbers = card.get("numbers")
+    red = []
+    blue = []
+    for s in numbers: # ajoute les nombres à leur liste 
+        if "R" == s[-1]:
+            red.append(int(s[:-1]))
+        else: 
+            blue.append(int(s[:-1]))
+    total = sum(red)
+    normal = sum(range(min(red), max(red)+1))
+    if total != normal:
+        return normal - total
+    else:
+        return sum(range(min(blue), max(blue)+1)) - sum(blue)
+                    </code>
+                </pre>
+            </div>
+        </div>
+        <div class="problem" id="raisonnement"><h1>Raisonnement</h1>
+            <div class="try">
+                <p>Le problème raisonnement peut être résolu de plein de manières différentes.
+                    Notre premier algorithme fonctionnait pour les cartes d'exemple mais se montra
+                    défaillant lorsqu'il fût essayé sur un plus grand jeu de carte. 
+                    Il "découpe" d'abord la pièce manquante du tableau et élimine les pièces ne faisant
+                    pas la même taille puis vérifie case par case les pièces restantes pour voir si elles correspondent.
+                </p>
+                <pre>
+                    <code class="language-py">
+def main(card: dict) -> str:
+    drawing = card.get("drawing")
+    pieces = card.get("pieces")
+    len_drawing = len(drawing[0])
+    first, last = len_drawing, 0
+    start, end = 0, len(drawing)
+    # récupere la position du coté haut gauche (first) et du coté bas droite
+    # ainsi que les lignes dans laquelle la pièce manquante n'est pas incluse
+    for ligne in drawing: 
+        try:              
+            first = min(first, ligne.index(""))
+            last = max(last, len_drawing - ligne[::-1].index(""))
+        except:
+            # first != 0 quand premiere symbole trouvé
+            if first == len_drawing: start+=1 
+            else: end -= 1
+    #correspond à la pièce manquante
+    hole_value = [ligne[first:last] for ligne in drawing[start:end]] 
+    len_hole = len(hole_value)
+    for letter,piece in pieces.items():
+        if len(piece) == len_hole and len(piece[0]) == len(hole_value[0]):
+            for ligne_p,ligne_h in zip(piece, hole_value):
+                for case_p,case_h in zip(ligne_p, ligne_h):
+    # pièce manquante est composé de "" tandis que les pièces disponibles 
+    # sont composés de "X", si égale pas la bonne pièce
+                    if case_p == case_h: 
+                        break            
+    # permet de sauter le break si il n'y pas eu de break dans la boucle, 
+    # sinon sort de la boucle supérieur aussi
+                else: 
+                    continue
+                break  
+            else: # return letter seulement si la boucle inférieur n'a pas break
+                return letter
+                    </code>
+                </pre>
+            </div>
+            <div class="try">
+                <p>Beaucoup d'algorithme essayé était faux ou beaucoup trop complexe
+                    pour être optimale. Finalement nous sommes restés sur un "découpage"
+                    de la pièce manquante mais comparons directement chaque rangé plutôt que
+                    case par case.
+                </p>
+                <pre>
+                    <code class="language-py">
+def main(card :dict):
+    drawing=card.get("drawing")
+    pieces=card.get("pieces")
+    min_x = -1
+    min_y = -1
+    for i in range(len(drawing)):
+        try:
+            if min_x == -1: 
+                min_x = drawing[i].index("")
+            else:
+                min_x = min(min_x,drawing[i].index(""))
+            if min_y == -1:
+                min_y = i
+        except:
+            pass
+    for letter,piece in pieces.items():
+        width_piece = len(piece[0])
+        for row_piece, row_drawing in zip(piece, drawing[min_y:]):
+            if ["X" if c != "X" else "" for c in row_piece] != 
+            row_drawing[min_x:min_x+width_piece]:
+                break
+        else:
+            return letter
+                    </code>
+                </pre>
+            </div>
+        </div>
+        <div class="problem" id="reflexion"><h1>Réflexion</h1>
+            <div class="try">
+                <p>Le problème réflexion fût le plus directe. La position de la lampe 
+                    étant fixe, il suffit à l'algorithme d'avancer de case en case et de
+                    changer de direction en fonction du type de miroir qu'il rencontre
+                    jusqu'à toucher un des bords.
+                </p>
+                <pre>
+                    <code class="language-py">
+def main(card: dict) -> int:
+    cells = card.get("map") # position en [Y][X]
+    # position en [x,y] !!
+    row = 4
+    col = 2
+    lum_dir = [0,-1]
+    mirrors = {
+        "/":-1,
+        "\\":1
+    }
+    while 0 &lt; col &lt; 5 and 0 &lt; row &lt; 5:
+        mirror=mirrors.get(cells[row][col])
+        if mirror: lum_dir = [lum_dir[1]*mirror, lum_dir[0]*mirror] 
+        # lors contact miroir la direction (x,y) 
+        devient (y,x) * 1 ou -1 en fonction du miroir 
+        col += lum_dir[0]
+        row  += lum_dir[1]
+    # remplacer par dictionnaire plutôt que conditions ?
+    if row == 0: return col 
+    if col == 5: return row + 4
+    if row == 5: 
+        if col == 1:
+            return 11
+        return 13 - col
+    return 16 - row
+                    </code>
+                </pre>
+            </div>
+            <div class="try">
+                <p>Le seul changement permettant d'améliorer la vitesse de l'algorithme
+                    fût de changer le dictionnaire permettant de choisir la prochaine direction
+                    en fonction de miroir par une condition.
+                </p>
+                <pre>
+                    <code class="language-py">
+def main(card: dict) -> int:
+    cells = card.get("map")
+    row = 4
+    col = 2
+    lum_dir = [0,-1]
+    while 0 &lt; col &lt; 5 and 0 &lt; row &lt; 5:
+        cell = cells[row][col]
+        if cell != "":
+            if cell == "/": mirror = -1
+            else: mirror = 1
+            lum_dir = [lum_dir[1]*mirror, lum_dir[0]*mirror] 
+        col += lum_dir[0]
+        row  += lum_dir[1]
+    if row == 0: return col 
+    if col == 5: return row + 4
+    if row == 5: 
+        if col == 1:
+            return 11
+        return 13 - col
+    return 16 - row
+                    </code>
+                </pre>
+            </div>
+        </div>
     </div>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
+    <footer>
+        <nav class="bottom-bar">
+            <ul>
+                <li><a>Made by Binome 4</a></li>
+                <li><a href="https://github.com/Steeex/Cortex-Challenge">Github</a></li>
+                <li><a href="binome.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+        <div>
+            <p>
+                <a href="http://jigsaw.w3.org/css-validator/validator?lang=fr&profile=css3svg&uri=https%3A%2F%2Fsteeex.github.io%2FCortex-Challenge%2F&usermedium=all&vextwarning=&warning=1">
+                    <img style="border:0;width:88px;height:31px"
+                        src="http://jigsaw.w3.org/css-validator/images/vcss"
+                        alt="CSS Valide !" />
+                </a>
+            </p>
+            <p>
+                <a href="https://validator.w3.org/nu/?doc=https%3A%2F%2Fsteeex.github.io%2FCortex-Challenge%2F" target="_blank">
+                    <img src="https://raw.githubusercontent.com/bradleytaunt/html5-valid-badge/68b012b5c19b26f75d9bee2409420c916b2d451a/html5-validator-badge.svg" alt="HTML5 Valide !">
+                </a>
+            </p>
+        </div>
+    </footer>
     <script src="scripts.js"></script>
+    <script src="highlight/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
 </body>
-
 </html>

@@ -1,16 +1,6 @@
 /* Google Fonts - Poppins */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
 
-* {
-  margin: 0;
- color: #fff;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-}
-
-
-
-
 
 body {
   background-image: url('https://img.freepik.com/vecteurs-premium/concept-banniere-fond-ecran-site-web-medias-modele-technologie-numerique-fleche-bleu-fonce-geometrique-metallique_112380-1137.jpg');
