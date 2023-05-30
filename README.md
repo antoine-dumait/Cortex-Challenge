@@ -18,8 +18,11 @@ Cortex Challenge est un jeu de société où il faut allier réflexion et rapidi
     Raisonnement : quelle pièce s’insère exactement dans le dessin du haut ?
 
 cortex_challenge_test.py est l'algo de test de compétition.
+
 algo_time_comparaison.py permet de tester la vitesse des algos.
+
 words.txt est la banque de mots utilisés par les algos de création nécessitant des mots aléatoires.
+
 create_card.py est l'algo qui permet de créer des cartes de tailles et de complexité aléatoire.
 
 L'idée d'un algorithmme utilisant matplotlib pour analyser l'impact de la taille et de la complexité sur un algo à été émise mais l'algorithme n'a jamais vu le jour.
