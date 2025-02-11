@@ -28,4 +28,4 @@ create_card.py est l'algo qui permet de créer des cartes de tailles et de compl
 L'idée d'un algorithmme utilisant matplotlib pour analyser l'impact de la taille et de la complexité sur un algo à été émise mais l'algorithme n'a jamais vu le jour.
 Cela aurait permis d'avoir plusieurs algos à utilisés en fonction des données.
 
-Plus d'information sur la page de présentation du projet: https://steeex.github.io/Cortex-Challenge
+Plus d'information sur la page de présentation du projet: https://antoine-dumait.github.io/Cortex-Challenge/
